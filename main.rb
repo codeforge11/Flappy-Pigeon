@@ -45,10 +45,10 @@ class Controller
 
   def handle_key_held(event)
     case event.key
-    # when 'a'
-    #   @pigeon.x_speed = -2
-    # when 'd'
-    #   @pigeon.x_speed = 2
+      # when 'a'
+      #   @pigeon.x_speed = -2
+      # when 'd'
+      #   @pigeon.x_speed = 2
     when 'w', 'space', 'up'
       @pigeon.y_speed = -10
     when 's', 'down'
@@ -60,8 +60,8 @@ class Controller
 
   def handle_key_up(event)
     case event.key
-    # when 'a', 'd'
-    #   @pigeon.x_speed = 0
+      # when 'a', 'd'
+      #   @pigeon.x_speed = 0
     when 'w', 's', 'space', 'up', 'down'
       @pigeon.y_speed = 0
     else
@@ -82,6 +82,7 @@ class GameWindow
     @pigeon = Bird.new
     @controller = Controller.new(@pigeon)
     @obstacles = []
+    @score = 0
     create_obstacles
 
     Window.on :key_held do |event|
@@ -97,6 +98,7 @@ class GameWindow
     @pigeon.update
     update_obstacles
     check_collision
+    display_score
   end
 
   def show
@@ -143,6 +145,7 @@ class GameWindow
           obstacle.y = @obstacles.find { |o| o.y == 0 }.height + 100
           obstacle.height = Window.height - obstacle.y
         end
+        @score += 1
       end
     end
   end
@@ -150,13 +153,25 @@ class GameWindow
   def check_collision
     @obstacles.each do |obstacle|
       if @pigeon.bird.contains?(obstacle.x, obstacle.y) ||
-         @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y) ||
-         @pigeon.bird.contains?(obstacle.x, obstacle.y + obstacle.height) ||
-         @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y + obstacle.height)
+        @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y) ||
+        @pigeon.bird.contains?(obstacle.x, obstacle.y + obstacle.height) ||
+        @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y + obstacle.height)
         Window.close
       end
     end
   end
+
+  def display_score
+    @score_text&.remove
+    @score_text = Text.new(
+      "Score: #{@score}",
+      x: Window.width - 150,
+      y: 20,
+      size: 20,
+      color: 'white'
+    )
+  end
+
 end
 
 game = GameWindow.new
