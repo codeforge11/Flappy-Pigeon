@@ -6,19 +6,24 @@ class Bird
   def initialize
     @pigeon = Square.new(color: 'red', size: 25, x: 119, y: 242.5)
     @velocity = 0
-    @gravity = 0.5
+    @gravity = 0.03
     @x_speed = 0
     @y_speed = 0
   end
 
   def update
     @velocity += @gravity
+
     @pigeon.y += @velocity
 
-    if @pigeon.y + @pigeon.size > Window.height #lock
+    if @pigeon.y + @pigeon.size > Window.height
       @pigeon.y = Window.height - @pigeon.size
       @velocity = 0
+    elsif @pigeon.y < 0
+      @pigeon.y = 0
+      @velocity = 0
     end
+
 
     if @pigeon.x + @pigeon.size > Window.width
       @pigeon.x = Window.width - @pigeon.size
@@ -42,13 +47,13 @@ class Controller
 
   def handle_key_held(event)
     case event.key
-    when 'a'
-      @pigeon.x_speed = -2
-    when 'd'
-      @pigeon.x_speed = 2
-    when 'w'
+    # when 'a'
+    #   @pigeon.x_speed = -2
+    # when 'd'
+    #   @pigeon.x_speed = 2
+    when 'w', 'space','up'
       @pigeon.y_speed = -10
-    when 's'
+    when 's','down'
       @pigeon.y_speed = 10
     else
       puts "ERROR"
@@ -57,9 +62,9 @@ class Controller
 
   def handle_key_up(event)
     case event.key
-    when 'a', 'd'
-      @pigeon.x_speed = 0
-    when 'w', 's'
+    # when 'a', 'd'
+    #   @pigeon.x_speed = 0
+    when 'w', 's', 'space','up','down'
       @pigeon.y_speed = 0
     else
       puts "ERROR"
