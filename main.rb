@@ -112,8 +112,8 @@ class GameWindow
   private
 
   def create_obstacles
-    gap_size = 200
-    obstacle_width = 50
+    gap_size = 300
+    obstacle_width = 100
     obstacle_spacing = 350
 
     (0..Window.width).step(obstacle_spacing) do |x|
@@ -123,6 +123,7 @@ class GameWindow
         width: obstacle_width, height: gap_y,
         color: 'green'
       )
+
       bottom_obstacle = Rectangle.new(
         x: x, y: gap_y + gap_size,
         width: obstacle_width, height: Window.height - gap_y - gap_size,
@@ -139,10 +140,10 @@ class GameWindow
       if obstacle.x + obstacle.width < 0
         obstacle.x = Window.width
         if obstacle.y == 0
-          gap_y = rand(Window.height - 150)
+          gap_y = rand(Window.height - 250)
           obstacle.height = gap_y
         else
-          obstacle.y = @obstacles.find { |o| o.y == 0 }.height + 100
+          obstacle.y = @obstacles.find { |o| o.y == 0 }.height + 150
           obstacle.height = Window.height - obstacle.y
         end
         @score += 1
@@ -165,10 +166,10 @@ class GameWindow
     @score_text&.remove
     @score_text = Text.new(
       "Score: #{@score}",
-      x: Window.width - 150,
-      y: 20,
+      x: Window.width - 100,
+      y: 0,
       size: 20,
-      color: 'white'
+      color: 'black'
     )
   end
 
