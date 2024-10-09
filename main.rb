@@ -4,7 +4,7 @@ class Bird
   attr_accessor :x_speed, :y_speed, :velocity
 
   def initialize
-    @pigeon = Square.new(color: 'red', size: 25, x: 119, y: 242.5)
+    @pigeon = Square.new(color: 'red', size: 20, x: 119, y: 242.5)
     @velocity = 0
     @gravity = 0.01
     @x_speed = 0
@@ -44,28 +44,20 @@ class Controller
   end
 
   def handle_key_held(event)
-    case event.key
-      # when 'a'
-      #   @pigeon.x_speed = -2
-      # when 'd'
-      #   @pigeon.x_speed = 2
-    when 'w', 'space', 'up'
+    if %w[w space up].include?(event.key)
       @pigeon.y_speed = -10
-    when 's', 'down'
+    elsif %w[s down].include?(event.key)
       @pigeon.y_speed = 10
-    else
-      puts "ERROR"
     end
   end
 
   def handle_key_up(event)
-    case event.key
-      # when 'a', 'd'
-      #   @pigeon.x_speed = 0
-    when 'w', 's', 'space', 'up', 'down'
+    if %w[a d].include?(event.key)
+      @pigeon.x_speed = 0
+
+    elsif %w[w s space up down].include?(event.key)
       @pigeon.y_speed = 0
-    else
-      puts "ERROR"
+
     end
   end
 end
@@ -112,12 +104,12 @@ class GameWindow
   private
 
   def create_obstacles
-    gap_size = 300
+    gap_size = 250
     obstacle_width = 100
-    obstacle_spacing = 350
+    obstacle_spacing = 385
 
     (0..Window.width).step(obstacle_spacing) do |x|
-      gap_y = rand(Window.height - gap_size)
+      gap_y = (Window.height - gap_size) / 1.5
       top_obstacle = Rectangle.new(
         x: x, y: 0,
         width: obstacle_width, height: gap_y,
@@ -136,14 +128,14 @@ class GameWindow
 
   def update_obstacles
     @obstacles.each do |obstacle|
-      obstacle.x -= 2
+      obstacle.x -= 3
       if obstacle.x + obstacle.width < 0
         obstacle.x = Window.width
         if obstacle.y == 0
-          gap_y = rand(Window.height - 250)
+          gap_y = rand(Window.height - 150)
           obstacle.height = gap_y
         else
-          obstacle.y = @obstacles.find { |o| o.y == 0 }.height + 150
+          obstacle.y = @obstacles.find { |o| o.y == 0 }.height + 100
           obstacle.height = Window.height - obstacle.y
         end
         @score += 1
@@ -157,6 +149,7 @@ class GameWindow
         @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y) ||
         @pigeon.bird.contains?(obstacle.x, obstacle.y + obstacle.height) ||
         @pigeon.bird.contains?(obstacle.x + obstacle.width, obstacle.y + obstacle.height)
+        puts "You have #{@score} points"
         Window.close
       end
     end
